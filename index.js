@@ -13,12 +13,12 @@ app.listen(process.env.PORT || 80, () => {
     console.log('Server started!')
 });
 
-['SIGTERM', 'SIGINT'].forEach(event => {
-    process.on(event, (code) => {
+['SIGTERM', 'SIGINT', 'exit'].forEach(event => {
+    process.on(event, () => {
         console.log('Closing connection');
         closeConnection().then(() => {
             console.log('STream closed');
-            process.exit(code)
+            process.exit(0)
         })
     })
 })

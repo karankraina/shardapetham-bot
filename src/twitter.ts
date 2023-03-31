@@ -39,7 +39,7 @@ async function startStreaming() {
 
     // Add our rules
     await twitterBearer.v2.updateStreamRules({
-        add: [{ value: '#shardapeetham translate' }],
+        add: [{ value: '@shardapeetham translate' }],
     });
 
     const stream = await twitterBearer.v2.searchStream({

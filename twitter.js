@@ -11,18 +11,24 @@ const client = new TwitterApi({
     accessSecret: process.env.ACCESS_SECRET,
 });
 
+
 const bearer = new TwitterApi(process.env.BEARER_TOKEN);
 
 const twitterClient = client.readWrite;
 const twitterBearer = bearer.readOnly;
+
+let stream = null;
 
 function getTweetInfo(id) {
     return twitterBearer.v2.singleTweet(id)
 }
 
 async function getClient() {
+    if (stream) {
+        return stream;
+    }
     try {
-        const stream = await twitterBearer.v2.searchStream({
+        stream = await twitterBearer.v2.searchStream({
             'tweet.fields': ['referenced_tweets', 'author_id'],
             expansions: ['referenced_tweets.id'],
         });
@@ -32,12 +38,15 @@ async function getClient() {
     } catch (error) {
         console.log(error.message);
         await sleep(10000)
-        const stream = await getClient();
+        stream = await getClient();
         return stream;
     }
    
 }
 
+async function closeConnection() {
+    return stream.close();
+}
 async function setRules() {
 
 // Get and delete old rules if needed
@@ -101,5 +110,6 @@ module.exports = {
     replyToTweet,
     startStream,
     getTweetInfo,
-    singleReply
+    singleReply,
+    closeConnection
 }

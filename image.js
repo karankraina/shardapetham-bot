@@ -6,10 +6,10 @@ const shardaFont = font2base64.encodeToDataUrlSync(__dirname + '/Sharada.ttf')
 const hindiFont = font2base64.encodeToDataUrlSync(__dirname + '/Devnagri.ttf')
 
 
-async function generateImage(sharda, devnagri) {
+async function generateImage(sharda, devnagri, id) {
     
     return nodeHtmlToImage({
-        output: './sharda.png',
+        output: `./${id}.png`,
         html: `<html>
 
         <head>

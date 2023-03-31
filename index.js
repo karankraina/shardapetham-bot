@@ -1,9 +1,10 @@
 require("dotenv").config();
 const express = require('express');
+const fs = require('fs');
 const { generateImage } = require("./image");
 const { generateResponse } = require("./openai");
 const { devnagriToSharda } = require("./sharda");
-const { setRules, startStream, replyToTweet, getTweetInfo, singleReply } = require("./twitter");
+const { setRules, startStream, replyToTweet, getTweetInfo, singleReply, closeConnection } = require("./twitter");
 const { parser } = require("./utils");
 
 const app = express();
@@ -12,19 +13,34 @@ app.listen(process.env.PORT || 80, () => {
     console.log('Server started!')
 });
 
+['SIGTERM', 'SIGINT'].forEach(event => {
+    process.on(event, (code) => {
+        console.log('Closing connection');
+        closeConnection().then(() => {
+            console.log('STream closed');
+            process.exit(code)
+        })
+    })
+})
 
 app.get('/image/:id', async (request, response) => {
     try {
         const {id} = request.params;
+        const filePath = `${__dirname}/${id}.png`;
+
+        if (fs.existsSync(filePath)) {
+            // Do something
+            return response.sendFile(filePath);
+        }
     const tweet = await getTweetInfo(id);
     const { text } = tweet?.data ?? {}; 
 
     const devnagri = await generateResponse(text);
     const sharda = devnagriToSharda(devnagri);
 
-    await generateImage(sharda, devnagri);
+    await generateImage(sharda, devnagri, id);
 
-    response.sendFile(__dirname + '/sharda.png');
+    response.sendFile(filePath);
 
     } catch (error) {
         console.log(error.message);
@@ -66,6 +82,6 @@ async function main() {
 
 }
 
-main()
+main();
 
 

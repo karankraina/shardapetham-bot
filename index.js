@@ -1,8 +1,18 @@
 require("dotenv").config();
+const http = require('http');
 const { generateResponse } = require("./openai");
 const { devnagriToSharda } = require("./sharda");
 const { setRules, startStream, replyToTweet } = require("./twitter");
 const { parser } = require("./utils");
+
+// start a server for server
+const server = http.createServer((request, response) => {
+    response.end('Welcome to Shardapeetham Twitter Bot!');
+});
+
+server.listen(process.env.PORT || 80, () => {
+    console.log('Server running')
+})
 
 async function main() {
 

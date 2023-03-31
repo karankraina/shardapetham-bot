@@ -45,7 +45,7 @@ async function getClient() {
 }
 
 async function closeConnection() {
-    return stream.close();
+    return stream?.close?.();
 }
 async function setRules() {
 

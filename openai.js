@@ -10,7 +10,7 @@ const openai = new OpenAIApi(configuration);
 
 async function generateResponse(prompt) {
 
-    const message = `I will give you a message. If the message is written in devnagri script, return as is. If it is any other language or script, convert it to hindi and return in devnagri script. The message is "${prompt}". Never return more than 140 characters.`;
+    const message = `I will give you a message. If the message is written in devnagri script, return as is. If it is any other language or script, translate it to hindi and return in devnagri script. The message is "${prompt}". Never return more than 140 characters.`;
     const completion = await openai.createChatCompletion({
         model: "gpt-3.5-turbo",
         max_tokens: 1024,

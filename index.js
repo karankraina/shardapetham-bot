@@ -39,12 +39,12 @@ async function main() {
 
     await startStream(async tweet => {
         // Ignore RTs or self-sent tweets
-        console.log("Tweet Received : ", tweet.data);
         const isARt = tweet.data.referenced_tweets?.some(tweet => tweet.type === 'retweeted') ?? false;
         if (isARt || tweet.data.author_id === '802409206615683072') {
             return;
         }
-
+        
+        console.log("Tweet Received : ", tweet.data);
         const repliedToId = tweet?.includes?.tweets?.[1]?.id ?? '';
 
         const url = `${process.env.host || 'https://shardapeetham-bot.onrender.com'}/image/${repliedToId}`;
@@ -66,6 +66,6 @@ async function main() {
 
 }
 
-// main()
+main()
 
 

@@ -23,15 +23,9 @@ async function main() {
         console.log({ response, responseLength: response.length, text, textLength: text.length });
         const replies = parser(generated, response);
         console.log({replies})
-        // await tweet(tweet.data.id, 'Thanks for your tweet !');
-        // const tweeted = await twitterClient.v2.tweet(finalResponse, {
-        //     reply: {
-        //         in_reply_to_tweet_id: tweet.data.id,
-        //     }
-        // })
+        
         await replyToTweet(tweet.data.id, replies)
-        // Reply to tweet
-        // await twitterClient.v1.reply('Thanks for your tweet !', tweet.data.id);
+        
     })
 
 }

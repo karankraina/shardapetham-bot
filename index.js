@@ -24,7 +24,7 @@ app.get('/image/:id', async (request, response) => {
 
     await generateImage(sharda, devnagri);
 
-    response.sendFile('./sharda.png');
+    response.sendFile(__dirname + '/sharda.png');
 
     } catch (error) {
         console.log(error.message);
@@ -66,6 +66,6 @@ async function main() {
 
 }
 
-main()
+// main()
 
 

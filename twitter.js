@@ -16,6 +16,10 @@ const bearer = new TwitterApi(process.env.BEARER_TOKEN);
 const twitterClient = client.readWrite;
 const twitterBearer = bearer.readOnly;
 
+function getTweetInfo(id) {
+    return twitterBearer.v2.singleTweet(id)
+}
+
 async function getClient() {
     try {
         const stream = await twitterBearer.v2.searchStream({
@@ -46,11 +50,12 @@ if (rules.data?.length) {
 
 // Add our rules
 await twitterBearer.v2.updateStreamRules({
-    add: [{ value: '#revivesharda' }],
+    add: [{ value: '@shardapeetham translate' }],
 }).catch(() => console.log('Error in updating rules'));
 console.log('RULES UPDATED');
 
     
+
 }
 
 async function replyToTweet(tweetId, replies) {
@@ -70,11 +75,23 @@ async function replyToTweet(tweetId, replies) {
     // await twitterClient.v1.reply('Thanks for your tweet !', tweet.data.id);
     console.log('replied to tweet')
 }
+async function singleReply(tweetId, reply) {
+    
+    const tweeted = await twitterClient.v2.tweet(reply, {
+        reply: {
+            in_reply_to_tweet_id: tweetId,
+        }
+    });
+    // Reply to tweet
+    // await twitterClient.v1.reply('Thanks for your tweet !', tweet.data.id);
+    console.log('replied to tweet: ', tweeted);
+}
 
 async function startStream(fn) {
     const stream = await getClient();
     
     console.log('stream set')
+   
     stream.on(ETwitterStreamEvent.Data, fn);
 }
 
@@ -83,4 +100,6 @@ module.exports = {
     setRules,
     replyToTweet,
     startStream,
+    getTweetInfo,
+    singleReply
 }

@@ -1,17 +1,36 @@
 require("dotenv").config();
-const http = require('http');
+const express = require('express');
+const { generateImage } = require("./image");
 const { generateResponse } = require("./openai");
 const { devnagriToSharda } = require("./sharda");
-const { setRules, startStream, replyToTweet } = require("./twitter");
+const { setRules, startStream, replyToTweet, getTweetInfo, singleReply } = require("./twitter");
 const { parser } = require("./utils");
 
-// start a server for server
-const server = http.createServer((request, response) => {
-    response.end('Welcome to Shardapeetham Twitter Bot!');
+const app = express();
+
+app.listen(process.env.PORT || 80, () => {
+    console.log('Server started!')
 });
 
-server.listen(process.env.PORT || 80, () => {
-    console.log('Server running')
+
+app.get('/image/:id', async (request, response) => {
+    try {
+        const {id} = request.params;
+    const tweet = await getTweetInfo(id);
+    const { text } = tweet?.data ?? {}; 
+
+    const devnagri = await generateResponse(text);
+    const sharda = devnagriToSharda(devnagri);
+
+    await generateImage(sharda, devnagri);
+
+    response.download('./image.png');
+
+    } catch (error) {
+        console.log(error.message);
+        response.status(500).send('error')
+    }
+    
 })
 
 async function main() {
@@ -26,15 +45,22 @@ async function main() {
             return;
         }
 
-        const text = tweet.data.text.replace('#revivesharda', '').trim();
+        const repliedToId = tweet?.includes?.tweets?.[1]?.id ?? '';
 
-        const generated = await generateResponse(text);
-        const response = devnagriToSharda(generated)
-        console.log({ response, responseLength: response.length, text, textLength: text.length });
-        const replies = parser(generated, response);
-        console.log({replies})
+        const url = `${process.env.host || 'https://shardapeetham-bot.onrender.com'}/image/${repliedToId}`;
+        const message = `Hello,\nHere is your image URL: ${url}`;
+
+        // const text = tweet.data.text.replace('#revivesharda', '').trim();
+
+        // const generated = await generateResponse(text);
+        // const response = devnagriToSharda(generated)
+        // console.log({ response, responseLength: response.length, text, textLength: text.length });
+        // const replies = parser(generated, response);
+        // console.log({replies})
         
-        await replyToTweet(tweet.data.id, replies)
+        // await replyToTweet(tweet.data.id, replies)
+
+        await singleReply(tweet.data.id, message)
         
     })
 

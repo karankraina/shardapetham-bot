@@ -48,6 +48,20 @@ function parser(devnagri, sharda) {
 
 }
 
+function encode(obj) {
+    const string = JSON.stringify(obj);
+    const encoded = encodeURIComponent(string);
+    return encoded;
+
+}
+function decode(base) {
+    const decoded = decodeURIComponent(base);
+    const obj = JSON.parse(decoded);
+    return obj
+}
+
 module.exports = {
-    parser
+    parser,
+    encode,
+    decode
 }

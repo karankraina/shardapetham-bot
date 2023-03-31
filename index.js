@@ -24,7 +24,7 @@ app.get('/image/:id', async (request, response) => {
 
     await generateImage(sharda, devnagri);
 
-    response.download('./image.png');
+    response.sendFile('./sharda.png');
 
     } catch (error) {
         console.log(error.message);

@@ -2,20 +2,21 @@ const font2base64 = require('node-font2base64')
 const nodeHtmlToImage = require('node-html-to-image')
 
 
-const _data = font2base64.encodeToDataUrlSync(__dirname + '/Sharada.ttf')
+const shardaFont = font2base64.encodeToDataUrlSync(__dirname + '/Sharada.ttf')
+const hindiFont = font2base64.encodeToDataUrlSync(__dirname + '/Devnew.ttf')
 
 
 async function generateImage(sharda, devnagri) {
     
     return nodeHtmlToImage({
-        output: './image.png',
+        output: './sharda.png',
         html: `<html>
 
         <head>
             <style>
                 @font-face {
                     font-family: 'sharda';
-                    src: url(${_data}) format('woff2');
+                    src: url(${shardaFont}) format('woff2');
                 }
         
                 .sharda {

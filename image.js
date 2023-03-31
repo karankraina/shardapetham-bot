@@ -3,7 +3,7 @@ const nodeHtmlToImage = require('node-html-to-image')
 
 
 const shardaFont = font2base64.encodeToDataUrlSync(__dirname + '/Sharada.ttf')
-const hindiFont = font2base64.encodeToDataUrlSync(__dirname + '/Devnew.ttf')
+const hindiFont = font2base64.encodeToDataUrlSync(__dirname + '/Devnagri.ttf')
 
 
 async function generateImage(sharda, devnagri) {
@@ -18,10 +18,17 @@ async function generateImage(sharda, devnagri) {
                     font-family: 'sharda';
                     src: url(${shardaFont}) format('woff2');
                 }
+                @font-face {
+                    font-family: 'devnagri';
+                    src: url(${hindiFont}) format('woff2');
+                }
         
                 .sharda {
                     font-family: 'sharda';
                     color: #f65419;
+                }
+                .devnagri {
+                    font-family: 'devnagri';
                 }
                 * {
                     font-size: 1.2rem

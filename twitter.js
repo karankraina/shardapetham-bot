@@ -30,7 +30,7 @@ async function getClient() {
         // Enable auto reconnect
         return stream;
     } catch (error) {
-        console.log(error);
+        console.log(error.message);
         await sleep(10000)
         const stream = await getClient();
         return stream;
